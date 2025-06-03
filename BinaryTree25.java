@@ -1,10 +1,10 @@
 public class BinaryTree25 {
     Node25 root;
-    
+
     public BinaryTree25() {
         root = null;
     }
-    
+
     public boolean isEmpty() {
         return root == null;
     }
@@ -32,6 +32,59 @@ public class BinaryTree25 {
                     }
                 }
             }
+        }
+    }
+
+    // Tambahan 1: Menambahkan node secara rekursif
+    public void addRekursif(Mahasiswa25 mhs) {
+        root = tambahRekursif(root, mhs);
+    }
+
+    private Node25 tambahRekursif(Node25 current, Mahasiswa25 mhs) {
+        if (current == null) {
+            return new Node25(mhs);
+        }
+
+        if (mhs.ipk < current.mahasiswa.ipk) {
+            current.left = tambahRekursif(current.left, mhs);
+        } else {
+            current.right = tambahRekursif(current.right, mhs);
+        }
+        return current;
+    }
+
+    // Tambahan 2: Mencari Mahasiswa dengan IPK minimum
+    public Mahasiswa25 cariMinIPK() {
+        if (isEmpty()) return null;
+        Node25 current = root;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current.mahasiswa;
+    }
+
+    // Tambahan 3: Mencari Mahasiswa dengan IPK maksimum
+    public Mahasiswa25 cariMaxIPK() {
+        if (isEmpty()) return null;
+        Node25 current = root;
+        while (current.right != null) {
+            current = current.right;
+        }
+        return current.mahasiswa;
+    }
+
+    // Tambahan 4: Menampilkan mahasiswa dengan IPK di atas batas tertentu
+    public void tampilMahasiswaIPKdiAtas(double ipkBatas) {
+        tampilIPKdiAtasRekursif(root, ipkBatas);
+    }
+
+    private void tampilIPKdiAtasRekursif(Node25 node, double ipkBatas) {
+        if (node != null) {
+            tampilIPKdiAtasRekursif(node.left, ipkBatas);
+            if (node.mahasiswa.ipk > ipkBatas) {
+                node.mahasiswa.tampilInformasi();
+            }
+            tampilIPKdiAtasRekursif(node.right, ipkBatas);
         }
     }
 
@@ -94,7 +147,6 @@ public class BinaryTree25 {
             System.out.println("Binary tree kosong");
             return;
         }
-        //cari node (current) yang akan dihapus
         Node25 parent = root;
         Node25 current = root;
         boolean isLeftChild = false;
@@ -105,18 +157,17 @@ public class BinaryTree25 {
                 parent = current;
                 current = current.left;
                 isLeftChild = true;
-            } else if (ipk > current.mahasiswa.ipk) {
+            } else {
                 parent = current;
                 current = current.right;
                 isLeftChild = false;
             }
         }
-        //penghapusan
+
         if (current == null) {
             System.out.println("Data tidak ditemukan");
             return;
         } else {
-            //jika tidak ada anak (leaf), maka node dihapus
             if (current.left == null && current.right == null) {
                 if (current == root) {
                     root = null;
@@ -127,7 +178,7 @@ public class BinaryTree25 {
                         parent.right = null;
                     }
                 }
-            } else if (current.left == null) { //jika hanya punya 1 anak (kanan)
+            } else if (current.left == null) {
                 if (current == root) {
                     root = current.right;
                 } else {
@@ -137,7 +188,7 @@ public class BinaryTree25 {
                         parent.right = current.right;
                     }
                 }
-            } else if (current.right == null) { //jika hanya punya 1 anak (kiri)
+            } else if (current.right == null) {
                 if (current == root) {
                     root = current.left;
                 } else {
@@ -147,7 +198,7 @@ public class BinaryTree25 {
                         parent.right = current.left;
                     }
                 }
-            } else { //jika punya 2 anak
+            } else {
                 Node25 successor = getSuccessor(current);
                 System.out.println("Jika 2 anak, current = ");
                 successor.mahasiswa.tampilInformasi();
